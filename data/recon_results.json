@@ -1,0 +1,65 @@
+{
+  "target": "https://httpbin.org",
+  "domain": "httpbin.org",
+  "base_url": "https://httpbin.org",
+  "scan_time": "2026-03-20T06:17:07.995484",
+  "intensity": "medium",
+  "subdomains": [],
+  "open_ports": [],
+  "technologies": [
+    "200 OK",
+    "UNITED STATES",
+    "US",
+    "me@kennethreitz.org",
+    "gunicorn/19.9.0",
+    "54.83.233.101",
+    "text/javascript",
+    "httpbin.org",
+    "access-control-allow-origin,access-control-allow-credentials"
+  ],
+  "directories": [
+    "cache",
+    "cookies",
+    "deny",
+    "get",
+    "headers",
+    "html",
+    "image",
+    "ip",
+    "json",
+    "legacy",
+    "robots.txt",
+    "xml"
+  ],
+  "endpoints": [
+    "invalid value \"-ef\" for flag -kf: allowed values are sitemapxml, , all, robotstxt"
+  ],
+  "waf": "none",
+  "ssl_info": {},
+  "headers": {
+    "date": "Fri, 20 Mar 2026 00:47:24 GMT",
+    "content-type": "text/html; charset=utf-8",
+    "content-length": "9593",
+    "server": "gunicorn/19.9.0",
+    "access-control-allow-origin": "*",
+    "access-control-allow-credentials": "true"
+  },
+  "js_files": [],
+  "interesting_findings": [
+    "Missing HSTS header",
+    "Missing CSP header",
+    "Missing X-Content-Type-Options header",
+    "Missing X-Frame-Options header",
+    "Missing X-XSS-Protection header",
+    "Missing Referrer-Policy header",
+    "Missing Permissions-Policy header",
+    "Information disclosure: server: gunicorn/19.9.0"
+  ],
+  "raw_outputs": {
+    "wafw00f": "\n                   \u001b[1;97m______\n                  \u001b[1;97m/      \\\n                 \u001b[1;97m(  Woof! )\n                  \u001b[1;97m\\  ____/                      \u001b[1;91m)\n                  \u001b[1;97m,,                           \u001b[1;91m) (\u001b[1;93m_\n             \u001b[1;93m.-. \u001b[1;97m-    \u001b[1;92m_______                 \u001b[1;91m( \u001b[1;93m|__|\n            \u001b[1;93m()``; \u001b[1;92m|==|_______)                \u001b[1;91m.)\u001b[1;93m|__|\n            \u001b[1;93m/ ('        \u001b[1;92m/|\\                  \u001b[1;91m(  \u001b[1;93m|__|\n        \u001b[1;93m(  /  )       \u001b[1;92m / | \\                  \u001b[1;91m. \u001b[1;93m|__|\n         \u001b[1;93m\\(_)_))      \u001b[1;92m/  |  \\                   \u001b[1;93m|__|\u001b[0m\n\n                    \u001b[1;96m~ WAFW00F : \u001b[1;94mv2.3.2 ~\u001b[1;97m\n    The Web Application Firewall Fingerprinting Toolkit\n    \u001b[0m\n[*] Checking https://httpbin.org\n[+] Generic Detection results:\n[-] No WAF detected by the generic detection\n[~] Number of requests: 7\n",
+    "whatweb": "https://httpbin.org [200 OK] Country[UNITED STATES][US], Email[me@kennethreitz.org], HTML5, HTTPServer[gunicorn/19.9.0], IP[54.83.233.101], JQuery, Script[text/javascript], Title[httpbin.org], UncommonHeaders[access-control-allow-origin,access-control-allow-credentials]\n",
+    "ffuf": "\ncache\ncookies\ndeny\nget\nheaders\nhtml\nimage\nip\njson\nlegacy\nrobots.txt\nxml\n",
+    "katana": "invalid value \"-ef\" for flag -kf: allowed values are sitemapxml, , all, robotstxt\n"
+  },
+  "ai_analysis": "**Reconnaissance Analysis Report**\n=====================================\n\n### 1. Summary of Attack Surface\n\nThe target `https://httpbin.org` presents a moderate attack surface, with 12 discovered directories and 1 endpoint. The absence of a Web Application Firewall (WAF) and the disclosure of server information (`gunicorn/19.9.0`) may facilitate vulnerability exploitation. The attack surface is further expanded by the presence of various HTTP headers that can be manipulated or exploited.\n\n### 2. Key Technologies and Known Vulnerability Categories\n\n* **gunicorn/19.9.0**: Potential vulnerabilities in the WSGI server, such as:\n\t+ Denial of Service (DoS) attacks\n\t+ Remote Code Execution (RCE) vulnerabilities\n\t+ Information disclosure vulnerabilities\n* **text/javascript**: Potential vulnerabilities in client-side JavaScript code, such as:\n\t+ Cross-Site Scripting (XSS) attacks\n\t+ Cross-Site Request Forgery (CSRF) attacks\n* **HTTP/1.1**: Potential vulnerabilities in the HTTP protocol, such as:\n\t+ HTTP request smuggling attacks\n\t+ HTTP response splitting attacks\n\n### 3. Most Promising Attack Vectors\n\nBased on the reconnaissance data, the following attack vectors appear promising:\n\n* **Directory Traversal**: Exploiting the discovered directories to access sensitive files or data.\n* **Cross-Site Scripting (XSS)**: Injecting malicious JavaScript code to steal user data or take control of user sessions.\n* **Server-Side Request Forgery (SSRF)**: Manipulating the `gunicorn` server to make unauthorized requests to internal or external services.\n* **Information Disclosure**: Exploiting the disclosed server information to gain insights into the target's infrastructure and potential vulnerabilities.\n\n### 4. Notable Security Issues\n\nThe following security issues are already visible:\n\n* **Missing Security Headers**: The absence of essential security headers, such as HSTS, CSP, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, and Referrer-Policy, leaves the target vulnerable to various attacks.\n* **Information Disclosure**: The disclosure of server information (`gunicorn/19.9.0`) may facilitate vulnerability exploitation.\n* **Potential for XSS and CSRF attacks**: The presence of client-side JavaScript code and the lack of security headers increase the risk of XSS and CSRF attacks.\n\n### 5. Recommended Next Steps for Vulnerability Testing\n\nTo further assess the target's security, the following steps are recommended:\n\n* **Conduct a thorough directory traversal test** to identify potential vulnerabilities in the discovered directories.\n* **Perform an XSS vulnerability scan** to detect potential XSS vulnerabilities in the client-side JavaScript code.\n* **Test for SSRF vulnerabilities** by manipulating the `gunicorn` server to make unauthorized requests to internal or external services.\n* **Analyze the server's response to various HTTP requests** to identify potential vulnerabilities in the HTTP protocol.\n* **Conduct a version scan** to identify potential vulnerabilities in the `gunicorn` server and other technologies used by the target."
+}
